@@ -1,10 +1,15 @@
 package app.a2ms.top10downloader
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URL
+import kotlin.properties.Delegates
 
 class FeedEntry {
     var name: String = ""
@@ -30,21 +35,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(mTAG, "onCreate called")
-        val downloadData = DownloadData()
+        val downloadData = DownloadData(this, xmlListView)
         downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml")
         Log.d(mTAG, "onCreate done")
     }
 
     //inner class as Async requests
     companion object {
-        private class DownloadData : AsyncTask<String, Void, String>() {
+        private class DownloadData(context: Context, listView: ListView) : AsyncTask<String, Void, String>() {
             private val mTAG = "DownloadData"
+
+            var propContext: Context by Delegates.notNull()
+            var propListView: ListView by Delegates.notNull()
+
+            init {
+                propContext = context
+                propListView = listView
+            }
 
             override fun onPostExecute(result: String) {
                 super.onPostExecute(result)
 //                Log.d(mTAG, "onPostExecute: parameter is $result")
                 val parseApplications = ParseApplication()
                 parseApplications.parse(result)
+
+                val arrayAdapter = ArrayAdapter<FeedEntry>(propContext, R.layout.list_item, parseApplications.applications)
+                propListView.adapter = arrayAdapter
             }
 
             override fun doInBackground(vararg url: String?): String {
