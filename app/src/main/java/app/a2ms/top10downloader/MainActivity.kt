@@ -4,9 +4,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.MalformedURLException
 import java.net.URL
 
 class MainActivity : AppCompatActivity() {
@@ -41,57 +38,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             private fun downloadXML(urlPath: String?): String {
-                val xmlResult = StringBuilder()
-                try {
-                    val url = URL(urlPath)
-                    val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-                    val response = connection.responseCode
-                    Log.d(mTAG, "downloadXML: The response code was $response")
-
-
-//                    val reader = BufferedReader(InputStreamReader(connection.inputStream))
-//
-//                    val inputBuffer = CharArray(500)
-//                    var charsRead = 0
-//                    while (charsRead <= 0) {
-//                        charsRead = reader.read(inputBuffer)
-//                        if (charsRead > 0) {
-//                            xmlResult.append(String(inputBuffer, 0, charsRead))
-//                        }
-//                    }
-//                    reader.close()
-                    //todo Idiomatic Kotlin
-                    //val stream = connection.inputStream
-                    connection.inputStream.reader().use {
-                        xmlResult.append(it.readText())
-                    }
-                    Log.d(mTAG, "Received ${xmlResult.length} bytes")
-                    return xmlResult.toString()
-//                } catch (e: MalformedURLException) {
-//                    Log.e(mTAG, "downloadXML: Invalid URL ${e.message}")
-//                } catch (e: IOException) {
-//                    Log.e(mTAG, "downloadXML: IO Exception reading data: $e")
-//                } catch (e: SecurityException) {
-//                    Log.e(mTAG, "downloadXML: Security exception: Need permissions? $e")
-//                } catch (e: Exception) {
-//                    Log.e(mTAG, "Unknown error: $e")
-//                }
-                } catch (e: Exception) {
-                    val errorMessage: String = when (e) {
-                        is MalformedURLException -> "downloadXML: Invalid URL ${e.message}"
-                        is IOException -> "downloadXML: IO Exception reading data: ${e.message}"
-                        is SecurityException -> {
-                            e.printStackTrace()
-                            "downloadXML: Security Exception. Needs permissions? ${e.message}"
-                        }
-                        else -> "Unknown error: ${e.message}"
-                    }
-                }
-                return "" //If it gets to here, there's been a problem. Rerun the empty string
+                return URL(urlPath).readText()
             }
-
         }
-
 
     }
 
