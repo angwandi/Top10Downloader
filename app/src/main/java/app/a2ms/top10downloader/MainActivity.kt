@@ -43,6 +43,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(mTAG, "onCreate: called")
+        if (savedInstanceState != null) {
+            feedUrl = savedInstanceState.getString(STATE_URL)
+            feedLimit = savedInstanceState.getInt(STATE_LIMIT)
+        }
         downloadUrl(feedUrl.format(feedLimit))
         Log.d(mTAG, "onCreate: done")
 
@@ -95,6 +100,13 @@ class MainActivity : AppCompatActivity() {
         }
         downloadUrl(feedUrl.format(feedLimit))
         return true
+    }
+
+    //Handle screen configuration changes
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(STATE_URL, feedUrl)
+        outState?.putInt(STATE_LIMIT, feedLimit)
     }
 
     override fun onDestroy() {
