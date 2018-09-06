@@ -1,15 +1,13 @@
 package app.a2ms.top10downloader
 
-import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
 class ParseApplication {
-    private val mTAG = "ParseApplication"
     val applications = ArrayList<FeedEntry>()
 
     fun parse(xmlData: String): Boolean {
-        Log.d(mTAG, "parse called with $xmlData")
+//        Log.d(mTAG, "parse called with $xmlData")
         var status = true
         var inEntry = false
         var textValue = ""
@@ -25,14 +23,14 @@ class ParseApplication {
                 val tagName = xpp.name?.toLowerCase()
                 when (eventType) {
                     XmlPullParser.START_TAG -> {
-                        Log.d(mTAG, "parse: Starting tag for " + tagName)
+//                        Log.d(mTAG, "parse: Starting tag for " + tagName)
                         if (tagName == "entry") {
                             inEntry = true
                         }
                     }
                     XmlPullParser.TEXT -> textValue = xpp.text
                     XmlPullParser.END_TAG -> {
-                        Log.d(mTAG, "parse: Ending tag for " + tagName)
+//                        Log.d(mTAG, "parse: Ending tag for " + tagName)
                         if (inEntry) {
                             when (tagName) {
                                 "entry" -> {
@@ -52,10 +50,10 @@ class ParseApplication {
                 // Nothing else to do
                 eventType = xpp.next()
             }
-            for (app in applications) {
-                Log.d(mTAG, "*********************")
-                Log.d(mTAG, app.toString())
-            }
+//            for (app in applications) {
+//                Log.d(mTAG, "*********************")
+//                Log.d(mTAG, app.toString())
+//            }
 
 
         } catch (e: Exception) {

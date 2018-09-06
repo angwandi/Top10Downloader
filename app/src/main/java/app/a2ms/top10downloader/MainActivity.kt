@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     //inner class as Async requests
     companion object {
         private class DownloadData(context: Context, listView: ListView) : AsyncTask<String, Void, String>() {
-            private val mTAG = "DownloadData"
 
             var propContext: Context by Delegates.notNull()
             var propListView: ListView by Delegates.notNull()
@@ -59,12 +58,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPostExecute(result: String) {
                 super.onPostExecute(result)
-//                Log.d(mTAG, "onPostExecute: parameter is $result")
                 val parseApplications = ParseApplication()
                 parseApplications.parse(result)
-
-//                val arrayAdapter = ArrayAdapter<FeedEntry>(propContext, R.layout.list_item, parseApplications.applications)
-//                propListView.adapter = arrayAdapter
 
                 //Set up the adapter
                 val feedAdapter = FeedAdapter(propContext, R.layout.list_record,
@@ -73,10 +68,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun doInBackground(vararg url: String?): String {
-                Log.d(mTAG, "doInBackground: starts with ${url[0]}")
+//                Log.d(mTAG, "doInBackground: starts with ${url[0]}")
                 val rssFeed = downloadXML(url[0])
                 if (rssFeed.isEmpty()) {
-                    Log.e(mTAG, "doInBackground: error downloading")
                 }
                 return rssFeed
             }
