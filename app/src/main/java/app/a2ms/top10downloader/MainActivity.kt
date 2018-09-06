@@ -31,18 +31,21 @@ class FeedEntry {
 
 class MainActivity : AppCompatActivity() {
     private val mTAG = "MainActivity"
-    private val downloadData by lazy { DownloadData(this, xmlListView) }
+    private var downloadData: DownloadData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d(mTAG, "onCreate called")
-        downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=25/xml")
-        Log.d(mTAG, "onCreate done")
+        downloadUrl("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=25/xml")
+        Log.d(mTAG, "onCreate: done")
+
     }
 
     private fun downloadUrl(feedURL: String) {
-
+        Log.d(mTAG, "downloadUrl starting AsyncTAsk")
+        downloadData = DownloadData(this, xmlListView)
+        downloadData?.execute(feedURL)
+        Log.d(mTAG, "onCreate done")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        downloadData.cancel(true)
+        downloadData?.cancel(true)
     }
 
     //inner class as Async requests
